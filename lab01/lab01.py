@@ -81,7 +81,7 @@ def test3():
 
 # implement this function
 def gen_pattern(chars):
-    char_list = [] 
+    char_list = []  
     i = 0
     j = len(chars) - 1  
     while j > 0: 
