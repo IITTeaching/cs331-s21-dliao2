@@ -16,8 +16,16 @@ def mysort(lst: List[T], compare: Callable[[T, T], int]) -> List[T]:
     elements of type T as input and returns -1 if the left is smaller than the
     right element, 1 if the left is larger than the right, and 0 if the two
     elements are equal.
-    """
-    pass
+    """  
+    sorted = []
+    while len(lst) > 0: 
+        key = lst[0] 
+        for i in range(len(lst)):  
+            if compare(lst[i], key) == -1: 
+                key = lst[i] 
+        lst.remove(key)
+        sorted.append(key) 
+    return sorted
 
 def mybinsearch(lst: List[T], elem: S, compare: Callable[[T, S], int]) -> int:
     """
@@ -27,7 +35,17 @@ def mybinsearch(lst: List[T], elem: S, compare: Callable[[T, S], int]) -> int:
     position of the first (leftmost) match for elem in lst. If elem does not
     exist in lst, then return -1.
     """
-    pass
+    upper = len(lst) - 1 
+    lower = 0 
+    for i in range(len(lst)):
+        mid = (upper + lower) // 2
+        if compare(lst[mid], elem) == 0: 
+            return mid 
+        elif compare(lst[mid], elem) == -1: 
+            lower = mid + 1 
+        elif compare(lst[mid], elem) == 1:   
+            upper = mid - 1    
+    return -1 
 
 class Student():
     """Custom class to test generic sorting and searching."""
@@ -111,8 +129,17 @@ class PrefixSearcher():
         """
         Initializes a prefix searcher using a document and a maximum
         search string length k.
-        """
-        pass
+        """  
+        self.document = document 
+        self.k = k
+        self.list = [] 
+        for i in range(len(document)):  
+            if i < len(document) - k: 
+                self.list.append(document[i: i+k])  
+            else: 
+                self.list.append(document[i:])  
+        compare_function = lambda x,y:  0 if x == y else (-1 if x < y else 1)
+        self.list = mysort(self.list, compare_function)  
 
     def search(self, q):
         """
@@ -120,8 +147,10 @@ class PrefixSearcher():
 
         length up to n). If q is longer than n, then raise an
         Exception.
-        """
-        pass
+        """ 
+        if len(q) > self.k: 
+            raise Exception('The string is too long.')
+        return q in self.document
 
 # 30 Points
 def test2():
@@ -157,27 +186,35 @@ def test2_2():
 #################################################################################
 # EXERCISE 3
 #################################################################################
-class SuffixArray():
-
+class SuffixArray(): 
     def __init__(self, document: str):
         """
         Creates a suffix array for document (a string).
         """
-        pass
-
+        self.document = document 
+        self.list = [i for i in range(len(document))]
+        compare = lambda x,y: 0 if self.document[x:] == self.document[y:] else (-1 if self.document[x:] < self.document[y:] else 1)
+        mysort(self.list, compare)
 
     def positions(self, searchstr: str):
         """
         Returns all the positions of searchstr in the documented indexed by the suffix array.
-        """
-        pass
+        """ 
+        positions = []
+        for i in range(len(self.document)-len(searchstr)): 
+            if self.document[i:i+len(searchstr)] == searchstr: 
+                positions.append(i) 
+        return positions 
 
     def contains(self, searchstr: str):
         """
         Returns true of searchstr is coontained in document.
-        """
-        pass
-
+        """ 
+        for i in range(len(self.document)-len(searchstr)): 
+            if self.document[i:i+len(searchstr)] == searchstr: 
+                return True 
+        return False
+  
 # 40 Points
 def test3():
     """Test suffix arrays."""
@@ -214,10 +251,13 @@ def test3_2():
 #################################################################################
 # TEST CASES
 #################################################################################
-def main():
-    test1()
-    test2()
-    test3()
+def main():  
+    test1() 
+    print('Test 1 complete')
+    test2() 
+    print('Test 2 complete')
+    test3()     
+    print('Test 3 complete')
 
 if __name__ == '__main__':
     main()
