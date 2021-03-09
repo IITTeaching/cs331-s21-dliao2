@@ -252,11 +252,11 @@ def test3_2():
 # TEST CASES
 #################################################################################
 def main():  
-    test1() 
+    test1()   
     print('Test 1 complete')
-    test2() 
+    test2()  
     print('Test 2 complete')
-    test3()     
+    test3()      
     print('Test 3 complete')
 
 if __name__ == '__main__':
