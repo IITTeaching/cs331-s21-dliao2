@@ -130,14 +130,6 @@ class LinkedList:
         self.cursor.next = self.Node(value, prior = self.cursor, next = self.cursor.next)
         self.cursor.next.next.prior = self.cursor.next
         self.cursor = self.cursor.next 
-        '''
-        if not self.cursor:
-            raise Exception("cursor has not been set")
-        new_node = self.Node(value, self.cursor, self.cursor.next) 
-        self.cursor.next = new_node   
-        self.cursor = self.cursor.next
-        self.length += 1
-        '''
         ### END SOLUTION
 
     def cursor_delete(self):
