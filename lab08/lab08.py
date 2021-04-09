@@ -23,11 +23,34 @@ class Heap:
         return idx*2+2
 
     def heapify(self, idx=0):
-        ### BEGIN SOLUTION
+        ### BEGIN SOLUTION    
+        while True:
+            lidx = self._left(idx)
+            ridx = self._right(idx)  
+            midx = idx
+            if lidx < len(self.data) and self.key(self.data[lidx]) > self.key(self.data[midx]):
+                midx = lidx  
+            if ridx < len(self.data) and self.key(self.data[ridx]) > self.key(self.data[midx]): 
+                midx = ridx  
+            if midx != idx: 
+                self.data[midx], self.data[idx] = self.data[idx], self.data[midx] 
+                idx = midx 
+            else: 
+                break  
         ### END SOLUTION
 
     def add(self, x):
-        ### BEGIN SOLUTION
+        ### BEGIN SOLUTION  
+        self.data.append(x) 
+        idx = len(self.data) - 1  
+        while idx > 0:  
+            pidx = self._parent(idx)
+            if self.key(self.data[idx]) > self.key(self.data[pidx]): 
+                self.data[idx], self.data[pidx] = self.data[pidx], self.data[idx] 
+                idx = pidx
+            else: 
+                break
+
         ### END SOLUTION
 
     def peek(self):
@@ -129,7 +152,22 @@ def test_key_heap_5():
 # 2. MEDIAN
 ################################################################################
 def running_medians(iterable):
-    ### BEGIN SOLUTION
+    ### BEGIN SOLUTION 
+    minHeap = Heap()
+    maxHeap = Heap(key=lambda x: -x)
+    medians = [0] * len(iterable)
+    
+    for i, x in enumerate(iterable):
+        minHeap.add(x)
+        maxHeap.add(minHeap.pop())
+        if len(maxHeap) > len(minHeap):
+            minHeap.add(maxHeap.peek())
+            maxHeap.pop() 
+        if len(minHeap) == len(maxHeap):
+            medians[i] = (minHeap.peek() + maxHeap.peek()) / 2
+        else:
+            medians[i] = minHeap.peek()
+    return medians
     ### END SOLUTION
 
 ################################################################################
@@ -173,7 +211,14 @@ def test_median_3():
 # 3. TOP-K
 ################################################################################
 def topk(items, k, keyf):
-    ### BEGIN SOLUTION
+    ### BEGIN SOLUTION  
+    minHeap = Heap(keyf)  
+    rtn = []
+    for i in range(len(items)): 
+        minHeap.add(items[i]) 
+    for i in range(k):  
+        rtn.append(minHeap.pop())
+    return rtn
     ### END SOLUTION
 
 ################################################################################
@@ -221,8 +266,7 @@ def main():
               test_median_1,
               test_median_2,
               test_median_3,
-              test_topk_students
-              ]:
+              test_topk_students]:
         say_test(t)
         t()
         say_success()
